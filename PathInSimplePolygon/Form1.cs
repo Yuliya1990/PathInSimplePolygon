@@ -17,8 +17,6 @@ namespace PathInSimplePolygon
             {
                 Graphics graphics = e.Graphics;
                 Pen pen = new Pen(Color.Black);
-                graphics.ScaleTransform(1, -1);
-                graphics.TranslateTransform(0, -ClientSize.Height);
 
                 // Display the polygon
                 PointF[] points = new PointF[polygon.Vertices.Count+1]; // Exclude the duplicate vertex
@@ -91,6 +89,40 @@ namespace PathInSimplePolygon
         {
             var algorithm = new Algorithm(polygon);
             algorithm.PreliminaryProcessing();
+
+            // Отримання графічного об'єкта для форми
+            Graphics g = this.CreateGraphics();
+            // Домалювання відрізків
+            foreach (var segment in polygon.Segments)
+            {
+                // Отримання початкової і кінцевої точок відрізка
+                PointF startPoint = new PointF((float)segment.Start.X, (float)segment.Start.Y);
+                PointF endPoint = new PointF((float)segment.End.X, (float)segment.End.Y);
+
+                // Домалювання відрізка на формі
+                g.DrawLine(Pens.Red, startPoint, endPoint);
+                g.FillEllipse(Brushes.Red, new Rectangle((int)segment.MidPoint.X-2, (int)segment.MidPoint.Y-2, 5, 5));
+            }
+
+            string resultDebug = String.Empty;
+            /*    foreach (var segment in polygon.MaximalNonTrivialCriticalSegments)
+                {
+                    foreach (var k in segment)
+                    {
+                        resultDebug += k.Start.X.ToString() + " " + k.Start.Y.ToString() + "     " + k.End.X + " " + k.End.Y + "\n";
+                    }
+                    resultDebug += "\n\n\n";
+                }
+            */
+
+            foreach (var segment in polygon.Segments)
+            {
+                resultDebug += segment.Start.X.ToString() + " " + segment.Start.Y.ToString() + "     " + segment.End.X + " " + segment.End.Y + "\n";
+            }
+            MessageBox.Show(resultDebug);
+            // Звільнення ресурсів графічного об'єкта
+
+            g.Dispose();
         }
     }
 }

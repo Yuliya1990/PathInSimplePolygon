@@ -20,5 +20,41 @@ namespace PathInSimplePolygon.Geometry
             Start = p1;
             End = p2;
         }
+
+        public static bool operator ==(LineSegment s1, LineSegment s2)
+        {
+            if (ReferenceEquals(s1, s2))
+                return true;
+
+            if (ReferenceEquals(s1, null) || ReferenceEquals(s2, null))
+                return false;
+
+            return s1.Start == s2.Start && s2.End == s2.End;
+        }
+
+        public static bool operator !=(LineSegment s1, LineSegment s2)
+        {
+            return !(s1 == s2);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+
+            LineSegment other = (LineSegment)obj;
+            return Start == other.Start && End == other.End;
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + Start.GetHashCode();
+                hash = hash * 23 + End.GetHashCode();
+                return hash;
+            }
+        }
     }
 }
